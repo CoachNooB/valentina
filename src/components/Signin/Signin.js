@@ -19,7 +19,7 @@ class Signin extends React.Component {
     }
 
     onSubmitSignIn = () => {
-        fetch('http://192.168.1.2:3001/signin', {
+        fetch('https://valentina-api.herokuapp.com/signin', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
