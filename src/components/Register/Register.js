@@ -24,7 +24,7 @@ class Register extends React.Component {
     }
 
     onSubmitRegister = () => {
-        fetch('http://localhost:3001/register', {
+        fetch('http://192.168.1.2:3001/register', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -35,9 +35,11 @@ class Register extends React.Component {
         })
             .then(response => response.json())
             .then(user => {
-                if(user) {
+                if(user.id) {
                     this.props.loadUser(user)
                     this.props.onRouteChange('home');
+                } else {
+                    alert('Form Cannot be Empty')
                 }
             })  
     }

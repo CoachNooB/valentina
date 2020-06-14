@@ -7,14 +7,7 @@ import Logo from './components/Logo/Logo.js';
 import Rank from './components/Rank/Rank.js';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm.js';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition.js';
-import Clarifai from 'clarifai';
 import './App.css';
-
-const app = new Clarifai.App({
-  apiKey: '00deef5f06904eb9aa15ec6b57621075',
-});
-
-
 
 const particlesOptions = {
   particles: {
@@ -83,24 +76,30 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input })
-    app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-    .then(response => {
-      if(response) {
-        fetch('http://localhost:3001/image', {
-          method: 'put',
+    fetch('http://192.168.1.2:3001/imageurl', {
+          method: 'post',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
-            id: this.state.user.id
+            input: this.state.input
           })
+        }).then(response => response.json())
+        .then(response => {
+          if(response) {
+            fetch('http://192.168.1.2:3001/image', {
+              method: 'put',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                id: this.state.user.id
+              })
+            })
+              .then(response => response.json())
+              .then(count => {
+                this.setState(Object.assign(this.state.user, {entries: count}))
+              }).catch(console.log)
+          }
+          this.displayFaceBox(this.calculateFaceLocation(response))
         })
-          .then(response => response.json())
-          .then(count => {
-            this.setState(Object.assign(this.state.user, {entries: count}))
-          }).catch(console.log)
-      }
-      this.displayFaceBox(this.calculateFaceLocation(response))
-    })
-    .catch(err => console.log(err));
+        .catch(err => console.log(err));
   }
 
   onRouteChange = (route) => {

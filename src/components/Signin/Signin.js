@@ -19,7 +19,7 @@ class Signin extends React.Component {
     }
 
     onSubmitSignIn = () => {
-        fetch('http://localhost:3001/signin', {
+        fetch('http://192.168.1.2:3001/signin', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -32,6 +32,8 @@ class Signin extends React.Component {
                 if(user.id) {
                     this.props.loadUser(user);
                     this.props.onRouteChange('home');
+                } else {
+                    alert('Invalid Username or Password')
                 }
             })  
     }
